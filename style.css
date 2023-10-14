@@ -1,0 +1,34 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-size: 18px;
+}
+
+.header {
+  font-size: 2rem;
+  padding: 3rem;
+  text-align: center;
+}
+
+.main {
+  display: flex;
+  justify-content: center;
+}
+
+.square-container {
+  box-shadow: 10px 10px 40px -25px orangered;
+
+  display: flex;
+  flex-wrap: wrap;
+
+  height: 700px;
+  width: 700px;
+}
+
+.square {
+  border: 1px solid black;
+}
