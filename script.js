@@ -1,8 +1,9 @@
 'use strict';
 
 const gridContainer = document.querySelector('.grid-container');
-const startBtn = document.querySelector('.start-btn');
+const selectSizeBtn = document.querySelector('.select-size-btn');
 const resetBtn = document.querySelector('.reset-btn');
+const eraseBtn = document.querySelector('.erase-btn');
 
 let isActive = false;
 
@@ -35,7 +36,7 @@ const makeMeColorful = function (target, generateRGBNumbers) {
 
 renderGrids(16, createGrid);
 
-startBtn.addEventListener('click', function () {
+selectSizeBtn.addEventListener('click', function () {
   isActive = false;
   const numberOfGrids = prompt('Please enter between 1 and 100');
   if (isNaN(numberOfGrids)) {
@@ -51,6 +52,8 @@ resetBtn.addEventListener('click', function () {
   grids.forEach(grid => (grid.style.backgroundColor = 'inherit'));
   isActive = false;
 });
+
+eraseBtn.addEventListener('click', function () {});
 
 gridContainer.addEventListener('click', function (e) {
   const target = e.target;
