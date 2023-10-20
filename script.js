@@ -48,7 +48,7 @@ startBtn.addEventListener('click', function () {
 
 resetBtn.addEventListener('click', function () {
   const grids = document.querySelectorAll('.grid');
-  grids.forEach(grid => (grid.style.backgroundColor = 'white'));
+  grids.forEach(grid => (grid.style.backgroundColor = 'inherit'));
   isActive = false;
 });
 
