@@ -27,7 +27,7 @@ body {
 }
 
 .btn {
-  background-color: #023047;
+  background-color: rgba(2, 48, 71, 0.7);
   border: none;
   border-radius: 10px;
   color: white;
@@ -39,6 +39,10 @@ body {
 .btn:hover {
   cursor: pointer;
   transform: scale(1.05);
+}
+
+.activeBtn {
+  background-color: rgba(2, 48, 71, 1);
 }
 
 .grid-container {

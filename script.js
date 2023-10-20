@@ -2,10 +2,12 @@
 
 const gridContainer = document.querySelector('.grid-container');
 const selectSizeBtn = document.querySelector('.select-size-btn');
+const colorBtn = document.querySelector('.color-btn');
 const resetBtn = document.querySelector('.reset-btn');
 const eraseBtn = document.querySelector('.erase-btn');
 
-let isActive = false;
+let colorMode = false;
+let eraseMode = false;
 
 const createGrid = function (size, parentEl) {
   const grid = document.createElement('div');
@@ -35,9 +37,10 @@ const makeMeColorful = function (target, generateRGBNumbers) {
 };
 
 renderGrids(16, createGrid);
+colorBtn.classList.add('activeBtn');
 
 selectSizeBtn.addEventListener('click', function () {
-  isActive = false;
+  colorMode = false;
   const numberOfGrids = prompt('Please enter between 1 and 100');
   if (isNaN(numberOfGrids)) {
     alert('You should enter a positive integer between 1 and 100');
@@ -47,27 +50,32 @@ selectSizeBtn.addEventListener('click', function () {
   renderGrids(+numberOfGrids, createGrid);
 });
 
+colorBtn.addEventListener('click', function () {
+  if (colorMode) return;
+  eraseMode = false;
+});
+
 resetBtn.addEventListener('click', function () {
   const grids = document.querySelectorAll('.grid');
   grids.forEach(grid => (grid.style.backgroundColor = 'inherit'));
-  isActive = false;
+  colorMode = false;
 });
 
-eraseBtn.addEventListener('click', function () {});
+// eraseBtn.addEventListener('click', function () {});
 
 gridContainer.addEventListener('click', function (e) {
   const target = e.target;
   if (!target.classList.contains('grid')) return;
-  if (!isActive) {
+  if (!colorMode) {
     makeMeColorful(target, generateRGBNumbers);
-    isActive = true;
-  } else isActive = false;
+    colorMode = true;
+  } else colorMode = false;
 });
 
 gridContainer.addEventListener('mouseover', function (e) {
   const target = e.target;
   if (!target.classList.contains('grid')) return;
-  if (isActive) {
+  if (colorMode) {
     makeMeColorful(target, generateRGBNumbers);
   }
 });
