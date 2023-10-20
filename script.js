@@ -6,8 +6,11 @@ const colorBtn = document.querySelector('.color-btn');
 const resetBtn = document.querySelector('.reset-btn');
 const eraseBtn = document.querySelector('.erase-btn');
 
-let colorMode = false;
+const active = 'active-btn';
+
+let colorMode = true;
 let eraseMode = false;
+let hoverEffect = false;
 
 const createGrid = function (size, parentEl) {
   const grid = document.createElement('div');
@@ -36,11 +39,15 @@ const makeMeColorful = function (target, generateRGBNumbers) {
   target.style.backgroundColor = `rgb(${generateRGBNumbers()})`;
 };
 
+const toggleClass = function (className, ...elements) {
+  elements.forEach(element => element.classList.toggle(className));
+};
+
 renderGrids(16, createGrid);
-colorBtn.classList.add('activeBtn');
+colorBtn.classList.add(active);
 
 selectSizeBtn.addEventListener('click', function () {
-  colorMode = false;
+  hoverEffect = false;
   const numberOfGrids = prompt('Please enter between 1 and 100');
   if (isNaN(numberOfGrids)) {
     alert('You should enter a positive integer between 1 and 100');
@@ -48,34 +55,63 @@ selectSizeBtn.addEventListener('click', function () {
   }
   gridContainer.innerHTML = '';
   renderGrids(+numberOfGrids, createGrid);
+
+  if (colorMode) return;
+  colorMode = true;
+  eraseMode = false;
+  toggleClass(active, colorBtn, eraseBtn);
 });
 
 colorBtn.addEventListener('click', function () {
+  hoverEffect = false;
   if (colorMode) return;
+  colorMode = true;
   eraseMode = false;
+  toggleClass(active, this, eraseBtn);
 });
 
 resetBtn.addEventListener('click', function () {
   const grids = document.querySelectorAll('.grid');
   grids.forEach(grid => (grid.style.backgroundColor = 'inherit'));
-  colorMode = false;
+  hoverEffect = false;
+
+  if (colorMode) return;
+  colorMode = true;
+  eraseMode = false;
+  toggleClass(active, colorBtn, eraseBtn);
 });
 
-// eraseBtn.addEventListener('click', function () {});
+eraseBtn.addEventListener('click', function () {
+  hoverEffect = false;
+
+  if (eraseMode) return;
+  eraseMode = true;
+  colorMode = false;
+  toggleClass(active, this, colorBtn);
+});
 
 gridContainer.addEventListener('click', function (e) {
   const target = e.target;
   if (!target.classList.contains('grid')) return;
-  if (!colorMode) {
+
+  if ((colorMode && hoverEffect) || (eraseMode && hoverEffect))
+    hoverEffect = false;
+  else if (colorMode && !hoverEffect) {
     makeMeColorful(target, generateRGBNumbers);
-    colorMode = true;
-  } else colorMode = false;
+    hoverEffect = true;
+  } else {
+    target.style.backgroundColor = 'inherit';
+    hoverEffect = true;
+  }
 });
 
 gridContainer.addEventListener('mouseover', function (e) {
+  if (!hoverEffect) return;
+
   const target = e.target;
   if (!target.classList.contains('grid')) return;
+
   if (colorMode) {
     makeMeColorful(target, generateRGBNumbers);
-  }
+  } else target.style.backgroundColor = 'inherit';
 });

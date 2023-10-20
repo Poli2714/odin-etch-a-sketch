@@ -41,7 +41,7 @@ body {
   transform: scale(1.05);
 }
 
-.activeBtn {
+.active-btn {
   background-color: rgba(2, 48, 71, 1);
 }
 
