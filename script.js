@@ -27,7 +27,7 @@ const renderGrids = function (n, createGrid) {
   }
 };
 
-const generateRGBNumbers = function () {
+const generateThreeNumbers = function () {
   let RGBNumbers = [];
   for (let i = 0; i < 3; i++) {
     RGBNumbers.push(Math.trunc(Math.random() * (256 + 1)));
@@ -35,12 +35,27 @@ const generateRGBNumbers = function () {
   return RGBNumbers;
 };
 
-const makeMeColorful = function (target, generateRGBNumbers) {
-  target.style.backgroundColor = `rgb(${generateRGBNumbers()})`;
+const setRGBAColor = function (target, generateThreeNumbers) {
+  target.style.backgroundColor = `rgba(${generateThreeNumbers()}, 10%)`;
 };
 
 const toggleClass = function (className, ...elements) {
   elements.forEach(element => element.classList.toggle(className));
+};
+
+const eraseColor = function (element) {
+  element.style.backgroundColor = 'inherit';
+  element.classList.remove('colorful');
+};
+
+const increaseOpacity = function (element) {
+  const currentBgColor = element.style.backgroundColor;
+  const lastCommaIndex = +currentBgColor.lastIndexOf(',');
+  const opacity = +currentBgColor.slice(lastCommaIndex + 2, -1) + 0.1;
+  if (opacity === 1) return;
+
+  const newColor = currentBgColor.slice(0, lastCommaIndex + 2) + `${opacity})`;
+  element.style.backgroundColor = newColor;
 };
 
 renderGrids(16, createGrid);
@@ -65,6 +80,7 @@ selectSizeBtn.addEventListener('click', function () {
 colorBtn.addEventListener('click', function () {
   hoverEffect = false;
   if (colorMode) return;
+
   colorMode = true;
   eraseMode = false;
   toggleClass(active, this, eraseBtn);
@@ -72,7 +88,10 @@ colorBtn.addEventListener('click', function () {
 
 resetBtn.addEventListener('click', function () {
   const grids = document.querySelectorAll('.grid');
-  grids.forEach(grid => (grid.style.backgroundColor = 'inherit'));
+  grids.forEach(grid => {
+    grid.style.backgroundColor = 'inherit';
+    grid.classList.remove('colorful');
+  });
   hoverEffect = false;
 
   if (colorMode) return;
@@ -83,8 +102,8 @@ resetBtn.addEventListener('click', function () {
 
 eraseBtn.addEventListener('click', function () {
   hoverEffect = false;
-
   if (eraseMode) return;
+
   eraseMode = true;
   colorMode = false;
   toggleClass(active, this, colorBtn);
@@ -94,24 +113,33 @@ gridContainer.addEventListener('click', function (e) {
   const target = e.target;
   if (!target.classList.contains('grid')) return;
 
-  if ((colorMode && hoverEffect) || (eraseMode && hoverEffect))
+  if ((colorMode && hoverEffect) || (eraseMode && hoverEffect)) {
     hoverEffect = false;
-  else if (colorMode && !hoverEffect) {
-    makeMeColorful(target, generateRGBNumbers);
+  } else if (
+    colorMode &&
+    !hoverEffect &&
+    !target.classList.contains('colorful')
+  ) {
+    setRGBAColor(target, generateThreeNumbers);
+    target.classList.add('colorful');
     hoverEffect = true;
-  } else {
-    target.style.backgroundColor = 'inherit';
+  } else if (eraseMode && !hoverEffect) {
+    eraseColor(target);
     hoverEffect = true;
-  }
+  } else hoverEffect = true;
 });
 
 gridContainer.addEventListener('mouseover', function (e) {
   if (!hoverEffect) return;
 
   const target = e.target;
+  const isColorful = target.classList.contains('colorful');
   if (!target.classList.contains('grid')) return;
 
-  if (colorMode) {
-    makeMeColorful(target, generateRGBNumbers);
-  } else target.style.backgroundColor = 'inherit';
+  if (colorMode && !isColorful) {
+    setRGBAColor(target, generateThreeNumbers);
+    target.classList.add('colorful');
+  } else if (colorMode && isColorful) {
+    increaseOpacity(target);
+  } else eraseColor(target);
 });
